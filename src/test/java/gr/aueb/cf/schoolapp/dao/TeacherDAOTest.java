@@ -3,16 +3,13 @@ package gr.aueb.cf.schoolapp.dao;
 import gr.aueb.cf.schoolapp.dao.exceptions.TeacherDAOException;
 import gr.aueb.cf.schoolapp.dao.util.DBHelper;
 import gr.aueb.cf.schoolapp.model.Teacher;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-
+import org.junit.jupiter.api.*;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
+
 class TeacherDAOTest {
 
     private static ITeacherDAO teacherDAO;
@@ -38,8 +35,64 @@ class TeacherDAOTest {
         createDummyData();
     }
 
+    @Test
+    public void pesristAndGetTeacher() throws TeacherDAOException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
 
+        Teacher teacher = new Teacher(null, "Λαμπρινή", "Παπαδοπούλου", "1078563411", "Νίκος", "2222309876",
+                "lamp@aueb.gr", "Αδριανής", "99", "11122", 6,
+                "9b0e785c-52a8-46b6-a661-ea7689f6c6a8",
+                LocalDateTime.parse("2/3/2025 23:15", formatter),
+                LocalDateTime.parse("2/3/2025 23:15", formatter));
 
+        teacherDAO.insert(teacher);
+        List<Teacher> teachers = teacherDAO.getByLastname("Παπαδοπούλου");
+        assertEquals(1, teachers.size());
+    }
+
+    @Test
+    void updateTeacher() throws TeacherDAOException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
+
+        Teacher teacher = new Teacher(2, "Άννα", "Γιαννούτσου", "144445678", "Κώστας", "110345678",
+                "anna@gmail.com", "Γεωργούτσου", "12", "67856", 5,
+                "2467ffcf-9c4f-43bc-b43f-f8d097825566",
+                LocalDateTime.parse("26/2/2025 15:01", formatter),
+                LocalDateTime.parse("2/3/2025 22:54", formatter));
+
+        teacherDAO.update(teacher);
+
+        Teacher teacherUpdated = teacherDAO.getById(2);
+        assertEquals("Κώστας", teacherUpdated.getFatherName());
+        assertEquals("144445678", teacherUpdated.getVat());
+        assertEquals("110345678", teacherUpdated.getPhoneNum());
+    }
+
+    @Test
+    void deleteTeacher() throws TeacherDAOException {
+        teacherDAO.delete(1);
+
+        Teacher teacher = teacherDAO.getById(1);
+        assertNull(teacher);
+    }
+
+    @Test
+    void getTeacherByIdPositive() throws TeacherDAOException {
+        Teacher teacher = teacherDAO.getById(1);
+        assertEquals("Ανδρούτσος", teacher.getLastname());
+    }
+
+    @Test
+    void getTeacherByIdNegative() throws TeacherDAOException {
+        Teacher teacher = teacherDAO.getById(15);
+        assertNull(teacher);
+    }
+
+    @Test
+    void getTeacherByLastname() throws TeacherDAOException {
+        List<Teacher> teachers = teacherDAO.getByLastname("Ανδρού");
+        assertEquals(2, teachers.size());
+    }
 
     public static void createDummyData() throws TeacherDAOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
@@ -108,5 +161,5 @@ class TeacherDAOTest {
         teacherDAO.insert(teacher8);
         teacherDAO.insert(teacher9);
     }
-  
+
 }
