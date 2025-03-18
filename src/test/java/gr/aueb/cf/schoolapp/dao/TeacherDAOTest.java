@@ -36,7 +36,7 @@ class TeacherDAOTest {
     }
 
     @Test
-    public void pesristAndGetTeacher() throws TeacherDAOException {
+    public void persistAndGetTeacher() throws TeacherDAOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy HH:mm");
 
         Teacher teacher = new Teacher(null, "Λαμπρινή", "Παπαδοπούλου", "1078563411", "Νίκος", "2222309876",

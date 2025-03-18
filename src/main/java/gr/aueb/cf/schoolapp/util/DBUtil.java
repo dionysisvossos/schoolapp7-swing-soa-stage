@@ -12,7 +12,7 @@ public class DBUtil {
 	
 	static {
 		ds.setUrl("jdbc:mysql://localhost:3306/schooldb7staging?serverTimeZone=UTC");
-		ds.setUsername("user7");
+		ds.setUsername("dennis");
 		ds.setPassword("12345");
 
 		// Το Maven automatically detects the driver, no need for the following
